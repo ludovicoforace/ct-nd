@@ -6,7 +6,7 @@
     "name": "Ludovico Forace"
   },
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "play": "nodemon src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "type-check": "tsc --noEmit",
