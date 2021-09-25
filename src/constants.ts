@@ -13,3 +13,19 @@ export const antiClockwiseSeq = [
   CardinalDirection.South,
   CardinalDirection.East
 ]
+
+export const missionXInputs = {
+  plateauSize: '5 5',
+  rovers: [
+    {
+      id: '001',
+      coordinates: '1 2 N',
+      instructions: 'LMLMLMLMM'
+    },
+    {
+      id: '002',
+      coordinates: '3 3 E',
+      instructions: 'MMRMMRMRRM'
+    }
+  ]
+}
