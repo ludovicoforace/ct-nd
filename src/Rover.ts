@@ -7,15 +7,13 @@ class Rover {
   private x: number | null
   private y: number | null
   private heading: CardinalDirection | null
-  private maxX: number
-  private maxY: number
+  private plateau: Plateau
 
   constructor(plateau: Plateau) {
     this.x = null
     this.y = null
     this.heading = null
-    this.maxX = plateau.getXBoundary
-    this.maxY = plateau.getYBoundary
+    this.plateau = plateau
   }
 
   private getIsRotationInstruction(str: string): str is Rotation {
@@ -27,12 +25,19 @@ class Rover {
   }
 
   private getIsValidPlacement(x: string, y: string, heading: string): boolean {
+    const { getXBoundary, getYBoundary } = this.plateau
     const rotPattern = '(^)(N|S|W|E)($)'
-    const xPattern = `^[0-${this.maxX - 1}]$`
-    const yPattern = `^[0-${this.maxY - 1}]$`
+    const xPattern = `^[0-${getXBoundary - 1}]$`
+    const yPattern = `^[0-${getYBoundary - 1}]$`
     const pattern = new RegExp(`${rotPattern}|${xPattern}|${yPattern}`, 'i')
 
-    return [x, y, heading].every(arg => pattern.test(arg))
+    const grid = this.plateau.getGrid
+    const gridPattern = new RegExp(`${x}${y}`)
+
+    return (
+      [x, y, heading].every(arg => pattern.test(arg)) &&
+      !gridPattern.test(grid)
+    )
   }
 
   private getRoverHeading(rotation: Rotation): CardinalDirection | null {
@@ -54,20 +59,56 @@ class Rover {
 
   move(): void {
     if(!this.heading || this.x == null || this.y == null) return
+    const { getXBoundary } = this.plateau
 
     switch(this.heading) {
-      case CardinalDirection.North:
-        if ((this.y + 1) < this.maxY) this.y = this.y + 1
+      case CardinalDirection.North: {
+        const nextPos = this.y + 1
+        const pattern = new RegExp(`${this.x}${nextPos}`)
+        const grid = this.plateau.getGrid
+
+        if (nextPos < getXBoundary && !pattern.test(grid)) {
+          this.y = nextPos
+          this.plateau.setGrid = String(this.x + nextPos)
+        }
         break
-      case CardinalDirection.South:
-        if((this.y - 1) > -1) this.y = this.y - 1
+      }
+
+      case CardinalDirection.South: {
+        const nextPos = this.y - 1
+        const pattern = new RegExp(`${this.x}${nextPos}`)
+        const grid = this.plateau.getGrid
+
+        if(nextPos > -1 && !pattern.test(grid)) {
+          this.y = nextPos
+          this.plateau.setGrid = String(this.x + nextPos)
+        }
         break
-      case CardinalDirection.West:
-        if((this.x - 1) > -1) this.x = this.x - 1
+      }
+
+      case CardinalDirection.West: {
+        const nextPos = this.x - 1
+        const pattern = new RegExp(`${nextPos}${this.y}`)
+        const grid = this.plateau.getGrid
+
+        if(nextPos > -1 && !pattern.test(grid)) {
+          this.x = nextPos
+          this.plateau.setGrid = String(nextPos + this.y)
+        }
         break
-      case CardinalDirection.East:
-        if((this.x + 1) < this.maxX) this.x = this.x + 1
+      }
+
+      case CardinalDirection.East: {
+        const nextPos = this.x + 1
+        const pattern = new RegExp(`${nextPos}${this.y}`)
+        const grid = this.plateau.getGrid
+
+        if(nextPos < getXBoundary && !pattern.test(grid)) {
+          this.x = nextPos
+          this.plateau.setGrid = String(nextPos + this.y)
+        }
         break
+      }
     }
   }
 

@@ -44,4 +44,14 @@ describe('Plateau', () => {
       expect(grid.getYBoundary).toBe(1)
     })
   })
+
+  describe('We can set a grid string', () => {
+    const grid = new Plateau(-3, -4)
+
+    it('should set strings in the grid', () => {
+      const sequence = '01-44-34-67'
+      grid.setGrid = sequence
+      expect(grid.getGrid).toBe(`${sequence}-`)
+    })
+  })
 })

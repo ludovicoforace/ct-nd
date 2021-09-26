@@ -30,6 +30,9 @@ class Mission {
     this.rovers.forEach(({ id, coordinates, instructions }) => {
       const rover = new Rover(plateau)
       const placement = rover.execute(coordinates, instructions)
+      if(!placement) return
+      const [ x, y ] = placement.split(' ')
+      plateau.setGrid = String(x + y)
       this.messages.push(`Rover ${id} has been deployed at ${placement}`)
     })
     this.status = MissionStatus.Deployed
@@ -47,7 +50,7 @@ class Mission {
   }
 
   get getReport(): string | null {
-    if(this.status !== MissionStatus.Deployed || !this.messages.length) return null
+    if(this.status !== MissionStatus.Deployed || !this.messages.length) return Messages.NotDeployed
     return this.messages.join('\n')
   }
 }

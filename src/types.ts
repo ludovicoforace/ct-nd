@@ -13,7 +13,7 @@ export enum Rotation {
 export enum Messages {
   Deployed = 'The rovers have been deployed to Mars',
   Deploying = 'The rovers are being deployed to Mars',
-  NotDeployed = 'Call deploy to deploy the rovers to Mars',
+  NotDeployed = 'The rovers are not deployed',
 }
 
 export enum MissionStatus {

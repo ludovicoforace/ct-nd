@@ -23,7 +23,7 @@ describe('Rover', () => {
     })
   })
 
-  describe('ignores the moving instructions which go beyong the plateau boundaries', () => {
+  describe('ignores the moves which go beyong the plateau boundaries', () => {
     const plateau = new Plateau(5, 5)
     const rover = new Rover(plateau)
 
@@ -34,6 +34,19 @@ describe('Rover', () => {
 
     it('will not move the rover as all the moving instruction are incorrect', () => {
       expect(rover.execute('0 0 S', 'MMMM')).toBe('0 0 S')
+    })
+  })
+
+  describe('ignores the moves toward collision', () => {
+    it('moves, rotate the rover up to a certain point', () => {
+      const plateau = new Plateau(5, 5)
+      plateau.setGrid = '51'
+      const rover = new Rover(plateau)
+
+      expect(rover.execute('1 2 N', 'LMLMLMLMM')).toBe('1 3 N')
+      // only 4 instructions will be followed MMRM
+      // before stopping for collision
+      expect(rover.execute('3 3 E', 'MMRMMRMRRM')).toBe('5 2 E')
     })
   })
 
@@ -56,6 +69,19 @@ describe('Rover', () => {
         expect(rover.getX).toBe(2)
         expect(rover.getY).toBe(4)
         expect(rover.getHeading).toBe('E')
+      })
+    })
+
+    describe('we have a collision', () => {
+      it('does not place the rover', () => {
+        const plateau = new Plateau(4, 4)
+        plateau.setGrid = '24'
+        const rover = new Rover(plateau)
+
+        rover.place(2, 4, 'E')
+        expect(rover.getX).toBe(null)
+        expect(rover.getY).toBe(null)
+        expect(rover.getHeading).toBe(null)
       })
     })
 
@@ -84,63 +110,6 @@ describe('Rover', () => {
   })
 
   describe('move()', () => {
-    it('moves the rover northward', () => {
-      const plateau = new Plateau(4, 4)
-      const rover = new Rover(plateau)
-      rover.place(4, 0, 'N')
-      rover.move()
-
-      expect(rover.getX).toBe(4)
-      expect(rover.getY).toBe(1)
-      expect(rover.getHeading).toBe('N')
-    })
-
-    it('moves the rover southward', () => {
-      const plateau = new Plateau(5, 5)
-      const rover = new Rover(plateau)
-      rover.place(1, 2, 'S')
-      rover.move()
-      rover.move()
-
-      expect(rover.getX).toBe(1)
-      expect(rover.getY).toBe(0)
-      expect(rover.getHeading).toBe('S')
-    })
-
-    it('moves the rover westward', () => {
-      const plateau = new Plateau(5, 5)
-      const rover = new Rover(plateau)
-      rover.place(1, 0, 'W')
-      rover.move()
-
-      expect(rover.getX).toBe(0)
-      expect(rover.getY).toBe(0)
-      expect(rover.getHeading).toBe('W')
-    })
-
-    it('moves the rover eastward', () => {
-      const plateau = new Plateau(2, 2)
-      const rover = new Rover(plateau)
-      rover.place(0, 2, 'E')
-      rover.move()
-      rover.move()
-
-      expect(rover.getX).toBe(2)
-      expect(rover.getY).toBe(2)
-      expect(rover.getHeading).toBe('E')
-    })
-
-    it('does not move the rover when has reached its boundary', () => {
-      const plateau = new Plateau(1, 1)
-      const rover = new Rover(plateau)
-      rover.place(1, 0, 'E')
-      rover.move()
-
-      expect(rover.getX).toBe(1)
-      expect(rover.getY).toBe(0)
-      expect(rover.getHeading).toBe('E')
-    })
-
     it('does not move the rover when it is not placed', () => {
       const plateau = new Plateau(5, 5)
       const rover = new Rover(plateau)
@@ -149,6 +118,154 @@ describe('Rover', () => {
       expect(rover.getX).toBe(null)
       expect(rover.getY).toBe(null)
       expect(rover.getHeading).toBe(null)
+    })
+
+    describe('northward', () => {
+      it('moves the rover', () => {
+        const plateau = new Plateau(4, 4)
+        const rover = new Rover(plateau)
+        rover.place(4, 0, 'N')
+        rover.move()
+
+        expect(rover.getX).toBe(4)
+        expect(rover.getY).toBe(1)
+        expect(rover.getHeading).toBe('N')
+      })
+
+      it('does not move the rover beyond its boundary', () => {
+        const plateau = new Plateau(4, 4)
+        const rover = new Rover(plateau)
+        rover.place(4, 4, 'N')
+        rover.move()
+
+        expect(rover.getX).toBe(4)
+        expect(rover.getY).toBe(4)
+        expect(rover.getHeading).toBe('N')
+      })
+
+      it('does not move the rover when there is a collision', () => {
+        const plateau = new Plateau(4, 4)
+        plateau.setGrid = '41'
+        const rover = new Rover(plateau)
+        rover.place(4, 0, 'N')
+        rover.move()
+
+        expect(rover.getX).toBe(4)
+        expect(rover.getY).toBe(0)
+        expect(rover.getHeading).toBe('N')
+      })
+    })
+
+    describe('southward', () => {
+      it('moves the rover southward', () => {
+        const plateau = new Plateau(5, 5)
+        const rover = new Rover(plateau)
+        rover.place(1, 2, 'S')
+        rover.move()
+        rover.move()
+
+        expect(rover.getX).toBe(1)
+        expect(rover.getY).toBe(0)
+        expect(rover.getHeading).toBe('S')
+      })
+
+      it('does not move the rover beyond its boundary', () => {
+        const plateau = new Plateau(5, 5)
+        const rover = new Rover(plateau)
+        rover.place(1, 0, 'S')
+        rover.move()
+
+        expect(rover.getX).toBe(1)
+        expect(rover.getY).toBe(0)
+        expect(rover.getHeading).toBe('S')
+      })
+
+      it('does not move the rover when there is a collision', () => {
+        const plateau = new Plateau(5, 5)
+        plateau.setGrid = '22'
+        const rover = new Rover(plateau)
+        rover.place(2, 3, 'S')
+        rover.move()
+
+        expect(rover.getX).toBe(2)
+        expect(rover.getY).toBe(3)
+        expect(rover.getHeading).toBe('S')
+      })
+    })
+
+    describe('westward', () => {
+      it('moves the rover westward', () => {
+        const plateau = new Plateau(5, 5)
+        const rover = new Rover(plateau)
+        rover.place(1, 0, 'W')
+        rover.move()
+
+        expect(rover.getX).toBe(0)
+        expect(rover.getY).toBe(0)
+        expect(rover.getHeading).toBe('W')
+      })
+
+      it('does not move the rover beyond its boundary', () => {
+        const plateau = new Plateau(5, 5)
+        const rover = new Rover(plateau)
+        rover.place(0, 0, 'W')
+        rover.move()
+
+        expect(rover.getX).toBe(0)
+        expect(rover.getY).toBe(0)
+        expect(rover.getHeading).toBe('W')
+      })
+
+      it('does not move the rover when there is a collision', () => {
+        const plateau = new Plateau(5, 5)
+        plateau.setGrid = '22-14-33'
+        const rover = new Rover(plateau)
+        rover.place(2, 4, 'W')
+        rover.move()
+
+        expect(rover.getX).toBe(2)
+        expect(rover.getY).toBe(4)
+        expect(rover.getHeading).toBe('W')
+      })
+    })
+
+    describe('eastward', () => {
+      it('moves the rover eastward', () => {
+        const plateau = new Plateau(2, 2)
+        const rover = new Rover(plateau)
+        rover.place(0, 2, 'E')
+        rover.move()
+        rover.move()
+
+        expect(rover.getX).toBe(2)
+        expect(rover.getY).toBe(2)
+        expect(rover.getHeading).toBe('E')
+      })
+
+      it('does not move the rover beyond its boundary', () => {
+        const plateau = new Plateau(2, 2)
+        const rover = new Rover(plateau)
+        rover.place(2, 2, 'E')
+        rover.move()
+        rover.move()
+
+        expect(rover.getX).toBe(2)
+        expect(rover.getY).toBe(2)
+        expect(rover.getHeading).toBe('E')
+      })
+
+      it('does not move the rover when there is a collision', () => {
+        const plateau = new Plateau(2, 2)
+        plateau.setGrid = '22-14-12'
+        const rover = new Rover(plateau)
+        rover.place(0, 2, 'E')
+        rover.move()
+        rover.move()
+
+        expect(rover.getX).toBe(0)
+        expect(rover.getY).toBe(2)
+        expect(rover.getHeading).toBe('E')
+      })
     })
   })
 
