@@ -1,6 +1,6 @@
 # CT-ND
 ## Notes
-Beyond the regular requirements, a couple of questions arised during development:
+Beyond the regular requirements, a couple of unanswered questions arised during development:
 - What about the plateau boundaries?
 - What about collision with other rovers in the plateau?
 
