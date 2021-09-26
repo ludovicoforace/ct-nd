@@ -1,3 +1,4 @@
+import { missionXInputs } from './constants'
 import Plateau from './Plateau'
 import Rover from './Rover'
 import { Rotation } from './types'
@@ -5,7 +6,9 @@ import { Rotation } from './types'
 describe('Rover', () => {
   describe('we send the rover correct inputs', () => {
     it('moves, rotate the rover and outputs the updated positions', () => {
-      const plateau = new Plateau(5, 5)
+      const { plateauSize } = missionXInputs
+      const [x, y] = plateauSize.split(' ')
+      const plateau = new Plateau(Number(x), Number(y))
       const rover = new Rover(plateau)
 
       expect(rover.execute('1 2 N', 'LMLMLMLMM')).toBe('1 3 N')
