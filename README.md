@@ -14,7 +14,7 @@ npm install
 ```
 
 ## Test all the modules at once
-I'm using mock data for each test instance which is fed to the Rover class in the `spec` files. Same thing for the Plateau class. So probably this is the best evidence to indicating that it works
+I'm using mock data for each test instance which is fed to the Rover class in the `spec` files. Same thing for the Plateau and Mission class. So this is the best evidence to indicating that it works
 ```sh
 npm run test:watch
 ```
