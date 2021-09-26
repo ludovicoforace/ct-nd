@@ -6,7 +6,7 @@ Beyond the regular requirements, a couple of questions arised during development
 
 My answer to those was:
 - A rover will ignore moving instructions that would bring it beyond its plateau boundary (the plateau boundaries are set at plateau instantiation)
-- A rover will ignore moving instructions if the places where it is supposed to move are occupied by another rover (the `grid` property keep track of already occupied space in the plateau)
+- A rover will ignore moving instructions if the places where it is supposed to move are occupied by other rovers (the `grid` property keep track of already occupied space in the plateau)
 
 ## Install
 ```sh
