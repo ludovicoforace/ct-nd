@@ -1,4 +1,12 @@
 # CT-ND
+## Notes
+Beyond the regular requirements, a couple of questions arised during development:
+- What about the plateau boundaries?
+- What about collision with other rovers in the plateau?
+
+My answer to those was:
+- A rover won't move if it has reached its plateau boundary (the plateau boundaries are set at plateau instantiation)
+- A rover won't move if the place where it is supposed to move is occupied by another rover (the `grid` property keep track of already occupied space in the plateau)
 
 ## Install
 ```sh
